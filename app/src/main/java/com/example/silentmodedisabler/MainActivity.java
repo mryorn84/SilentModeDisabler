@@ -1,40 +1,43 @@
-
 package com.example.silentmodedisabler;
 
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import androidx.annotation.Nullable;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestNotificationPolicyAccess();
-        startSilentService();
-        finish();
-    }
+        setContentView(R.layout.activity_main);
 
-    private void requestNotificationPolicyAccess() {
-        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !nm.isNotificationPolicyAccessGranted()) {
+        // چک کردن اجازهٔ دسترسی به Do Not Disturb
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null && !notificationManager.isNotificationPolicyAccessGranted()) {
+            Toast.makeText(this, "لطفاً اجازه دسترسی به Do Not Disturb را بدهید", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
-    }
 
-    private void startSilentService() {
-        Intent serviceIntent = new Intent(this, SilentCheckService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent);
-        } else {
-            startService(serviceIntent);
-        }
+        // اجرای DisableSilentWorker هر 15 دقیقه
+        PeriodicWorkRequest periodicWorkRequest =
+                new PeriodicWorkRequest.Builder(DisableSilentWorker.class, 15, TimeUnit.MINUTES)
+                        .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "disable_silent_mode_worker",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                periodicWorkRequest
+        );
     }
 }
