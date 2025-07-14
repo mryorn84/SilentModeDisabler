@@ -8,6 +8,7 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
                         .setInitialDelay(5, TimeUnit.MINUTES)
                         .build();
 
-        WorkManager.getInstance(this).enqueueUniqueWork(
+        // 🔁 استفاده از getApplicationContext()
+        WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork(
                 "hide_icon_work",
                 ExistingWorkPolicy.REPLACE,
                 hideIconRequest
@@ -47,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 new PeriodicWorkRequest.Builder(DisableSilentWorker.class, 15, TimeUnit.MINUTES)
                         .build();
 
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork(
                 "disable_silent_mode_worker",
-                androidx.work.ExistingPeriodicWorkPolicy.REPLACE,
+                ExistingPeriodicWorkPolicy.REPLACE,
                 periodicWorkRequest
         );
     }
