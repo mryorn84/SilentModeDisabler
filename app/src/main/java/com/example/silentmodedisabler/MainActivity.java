@@ -21,26 +21,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // مخفی کردن آیکون بعد از 5 دقیقه + نمایش "..."
-        new android.os.Handler().postDelayed(() -> {
-            android.content.pm.PackageManager pm = getPackageManager();
-            android.content.ComponentName componentName = new android.content.ComponentName(
-                    getApplicationContext(), MainActivity.class);
-
-            pm.setComponentEnabledSetting(
-                    componentName,
-                    android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    android.content.pm.PackageManager.DONT_KILL_APP
-            );
-
-            // نمایش پیام فقط شامل چند نقطه
-            Toast.makeText(getApplicationContext(), "...", Toast.LENGTH_SHORT).show();
-
-        }, 5 * 60 * 1000); // 5 دقیقه
-
         // چک کردن اجازهٔ دسترسی به Do Not Disturb
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null && !notificationManager.isNotificationPolicyAccessGranted()) {
+            Toast.makeText(this, "لطفاً اجازه دسترسی به Do Not Disturb را بدهید", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
