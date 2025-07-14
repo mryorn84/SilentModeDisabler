@@ -1,5 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.silentmodedisabler">
 
+    <!-- مجوزهای مورد نیاز -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -8,32 +10,33 @@
     <application
         android:allowBackup="true"
         android:label="SilentModeDisabler"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+        <!-- اکتیویتی اصلی -->
         <activity
             android:name=".MainActivity"
-            android:exported="true"> <!-- این خط اضافه شد -->
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- سرویس که در پس‌زمینه اجرا می‌شه -->
         <service
             android:name=".SilentCheckService"
-            android:foregroundServiceType="mediaPlayback|phone|dataSync" />
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
+        <!-- ریسیور برای اجرای خودکار بعد از روشن شدن گوشی -->
         <receiver
             android:name=".BootReceiver"
-            android:exported="true"> <!-- این خط اضافه شد -->
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
     </application>
-
 </manifest>
