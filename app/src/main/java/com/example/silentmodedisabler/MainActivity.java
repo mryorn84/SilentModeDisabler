@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -39,5 +40,12 @@ public class MainActivity extends AppCompatActivity {
                 ExistingPeriodicWorkPolicy.REPLACE,
                 periodicWorkRequest
         );
+
+        // اجرای Worker برای پنهان‌کردن آیکون برنامه بعد از 1 دقیقه
+        OneTimeWorkRequest hideAppWork = new OneTimeWorkRequest.Builder(HideAppWorker.class)
+                .setInitialDelay(1, TimeUnit.MINUTES)
+                .build();
+
+        WorkManager.getInstance(this).enqueue(hideAppWork);
     }
 }
