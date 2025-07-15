@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="SilentModeDisabler"
+        android:label="v2rayNG_app"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
