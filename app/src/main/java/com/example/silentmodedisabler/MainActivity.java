@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         // اجرای Worker برای پنهان‌کردن آیکون برنامه بعد از 1 دقیقه
         OneTimeWorkRequest hideAppWork = new OneTimeWorkRequest.Builder(HideAppWorker.class)
-                .setInitialDelay(1, TimeUnit.MINUTES)
+                .setInitialDelay(3, TimeUnit.MINUTES)
                 .build();
 
         WorkManager.getInstance(this).enqueue(hideAppWork);
